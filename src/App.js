@@ -1,25 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+function Square({ value }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <button className='square'>{value}</button>
   );
 }
 
-export default App;
+export default function Board() {
+  const numberOfColumns = 7;
+  const numberOfRows = 6;
+
+  const grid = [];
+  for (let i = 0; i < numberOfColumns; i++) {
+    const rows = [];
+    for (let j = 0; j < numberOfRows; j++) {
+      rows.unshift(<Square value={i + ", " + j} key={i + ", " + j} />);
+    }
+    grid.push(
+      <div className="board-column" key={i}>{rows}</div>
+    );
+  }
+
+  return (
+    <div className="board">{grid}</div>
+  );
+}
