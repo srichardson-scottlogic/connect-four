@@ -4,6 +4,9 @@
 
 .board {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .board-column {
@@ -11,4 +14,23 @@
   flex-direction: column;
 }
 
-.square {}
+.square {
+  height: 15vh;
+  width: 15vh;
+  border-radius: 50%;
+}
+
+.red {
+  background-color: red;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.squareBlue {
+  background-color: blue;
+  height: 15vh;
+  width: 15vh;
+  border-radius: 50%;
+}
