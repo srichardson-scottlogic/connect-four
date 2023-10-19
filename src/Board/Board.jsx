@@ -1,19 +1,18 @@
-import { cloneElement, useState } from 'react';
 import './Board.css';
 import Square from '../Sqaure/Square';
 
-export default function Board() {
-    const numberOfColumns = 7;
-    const numberOfRows = 6;
-    const [squares, setSquares] = useState(new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White")));
-    const [redIsNext, setRedIsNext] = useState(true);
-
+export default function Board({ redIsNext, squares, onPlay, winner }) {
+    const numberOfColumns = squares.length;
+    const numberOfRows = squares[0].length;
     function handlePlay(columnIndex) {
+        if (squares[columnIndex][numberOfRows - 1] !== "White"
+            || winner) {
+            return;
+        }
         const nextSquares = squares.slice();
         const rowIndex = calculateNextSquare(nextSquares[columnIndex]);
-        nextSquares[columnIndex][rowIndex] = redIsNext ? "red" : "blue";
-        setSquares(nextSquares);
-        setRedIsNext(!redIsNext);
+        nextSquares[columnIndex][rowIndex] = redIsNext ? "Red" : "Blue";
+        onPlay(nextSquares, redIsNext, columnIndex, rowIndex);
     }
 
     const grid = [];
@@ -42,5 +41,4 @@ function calculateNextSquare(columnSquares) {
             return square;
         }
     }
-    return columnSquares[columnSquares.length - 1];
 }
