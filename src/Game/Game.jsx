@@ -1,12 +1,14 @@
 import './Game.css';
 import { useState } from 'react';
 import Board from "../Board/Board";
+import ResetButton from "../ResetButton/ResetButton";
 
 export default function Game() {
     const numberOfColumns = 7;
     const numberOfRows = 6;
     const connectNumber = 4;
-    const [squares, setSquares] = useState(new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White")));
+    const emptyBoard = new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White"));
+    const [squares, setSquares] = useState(emptyBoard);
     const [redIsNext, setRedIsNext] = useState(true);
     const [winner, setWinner] = useState(null);
 
@@ -16,14 +18,29 @@ export default function Game() {
         calculateWinner(nextSquares, columnIndex, rowIndex, connectNumber, setWinner);
     }
 
+    function handleReplay() {
+        if (winner) {
+            setWinner(null);
+        }
+        setSquares(emptyBoard);
+    }
+
     let status;
     if (winner) {
         status = "Winner is " + winner + "!";
     }
 
+    let resetStatus = "Reset Game";
+    if (winner) {
+        resetStatus = "Play Again";
+    }
+
     return (
         <>
             <div className="status">{status}</div>
+            <div className="resetButtonContainer">
+                <ResetButton resetStatus={resetStatus} onResetClick={handleReplay} />
+            </div >
             <Board redIsNext={redIsNext} squares={squares} onPlay={handlePlay} winner={winner} />
         </>
     );
