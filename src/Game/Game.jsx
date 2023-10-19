@@ -3,10 +3,7 @@ import { useState } from 'react';
 import Board from "../Board/Board";
 import ResetButton from "../ResetButton/ResetButton";
 
-export default function Game() {
-    const numberOfColumns = 7;
-    const numberOfRows = 6;
-    const connectNumber = 4;
+export default function Game({ numberOfColumns, numberOfRows, connectNumber }) {
     const emptyBoard = new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White"));
     const [squares, setSquares] = useState(emptyBoard);
     const [redIsNext, setRedIsNext] = useState(true);
