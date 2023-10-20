@@ -1,4 +1,20 @@
 .customiseGame {
     display: flex;
     justify-content: center;
+    display: inline;
+}
+
+.formContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.resetButtonContainer {
+    display: flex;
+    justify-content: center;
+    border: 5px solid white;
+}
+
+.reset {
+    font-size: large;
 }
