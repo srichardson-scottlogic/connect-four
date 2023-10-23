@@ -8,19 +8,19 @@ export default function CustomisedGame() {
     const [winner, setWinner] = useState(null);
     const [gameCustomised, setGameCustomised] = useState(false);
 
-    function handlePlay(nextSquares, nextWinner) {
+    const handlePlay = (nextSquares, nextWinner) => {
         setSquares(nextSquares);
         setWinner(nextWinner);
     }
 
-    function handleRefresh(nextSquares) {
+    const handleRefresh = (nextSquares) => {
         if (winner) {
             setWinner(null);
         }
         setSquares(nextSquares);
     }
 
-    function handleBoardCustomisationSubmit(e) {
+    const handleBoardCustomisationSubmit = (e) => {
         e.preventDefault();
 
         const form = e.target;

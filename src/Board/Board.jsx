@@ -1,10 +1,10 @@
 import './Board.css';
-import Square from '../Sqaure/Square';
+import Square from '../Square/Square';
 
 export default function Board({ redIsNext, squares, onPlay, winner }) {
     const numberOfColumns = squares.length;
     const numberOfRows = squares[0].length;
-    function handlePlay(columnIndex) {
+    const handlePlay = (columnIndex) => {
         if (squares[columnIndex][numberOfRows - 1] !== "White"
             || winner) {
             return;
@@ -35,7 +35,7 @@ export default function Board({ redIsNext, squares, onPlay, winner }) {
     );
 }
 
-function calculateNextSquare(columnSquares) {
+const calculateNextSquare = (columnSquares) => {
     for (let square = 0; square < columnSquares.length; square++) {
         if (columnSquares[square] === "White") {
             return square;

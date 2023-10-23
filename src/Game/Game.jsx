@@ -4,7 +4,7 @@ import Board from "../Board/Board";
 export default function Game({ squares, connectNumber, handlePlay, winner }) {
     const [redIsNext, setRedIsNext] = useState(true);
 
-    function onPlay(nextSquares, redIsNext, columnIndex, rowIndex) {
+    const onPlay = (nextSquares, redIsNext, columnIndex, rowIndex) => {
         const nextWinner = calculateWinner(nextSquares, columnIndex, rowIndex, connectNumber);
         handlePlay(nextSquares, nextWinner);
         setRedIsNext(!redIsNext);
