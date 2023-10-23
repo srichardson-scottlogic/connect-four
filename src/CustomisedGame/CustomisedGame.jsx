@@ -36,6 +36,11 @@ export default function CustomisedGame() {
         handleRefresh(emptyBoard);
     }
 
+    let status;
+    if (winner) {
+        status = winner === "Draw" ? "It's a Draw!" : "Winner is " + winner + "!";
+    }
+
     let resetStatus;
     if (gameCustomised) {
         resetStatus = "Reset Game";
@@ -72,6 +77,7 @@ export default function CustomisedGame() {
                         />
                     </label>
                 </div>
+                <div className="winnerStatus">{status}</div>
                 <div className="resetButtonContainer">
                     <button className="reset" type="submit">{resetStatus}</button >
                 </div >

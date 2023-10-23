@@ -1,4 +1,3 @@
-import './Game.css';
 import { useState } from 'react';
 import Board from "../Board/Board";
 
@@ -6,21 +5,12 @@ export default function Game({ squares, connectNumber, handlePlay, winner }) {
     const [redIsNext, setRedIsNext] = useState(true);
 
     function onPlay(nextSquares, redIsNext, columnIndex, rowIndex) {
-        setRedIsNext(!redIsNext);
         const nextWinner = calculateWinner(nextSquares, columnIndex, rowIndex, connectNumber);
         handlePlay(nextSquares, nextWinner);
+        setRedIsNext(!redIsNext);
     }
-
-    let status;
-    if (winner) {
-        status = "Winner is " + winner + "!";
-    }
-
     return (
-        <>
-            <div className="winnerStatus">{status}</div>
-            <Board redIsNext={redIsNext} squares={squares} onPlay={onPlay} winner={winner} />
-        </>
+        <Board redIsNext={redIsNext} squares={squares} onPlay={onPlay} winner={winner} />
     );
 }
 
@@ -87,6 +77,16 @@ const calculateWinner = (squares, columnIndex, rowIndex, connectNumber) => {
         }
         i--;
         j++;
+    }
+
+    //Calculate if it's a draw
+    if (rowIndex === height - 1) {
+        for (let i = 0; i < width; i++) {
+            if (squares[i][rowIndex] === 'White') {
+                return null;
+            }
+        }
+        return 'Draw';
     }
 
     //If there's no winner return null
