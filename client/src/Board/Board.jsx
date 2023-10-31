@@ -9,10 +9,7 @@ export default function Board({ squares, onPlay, winner }) {
             || winner) {
             return;
         }
-        //const nextSquares = squares.slice();
         const rowIndex = calculateNextSquare(squares[columnIndex]);
-        //nextSquares[columnIndex][rowIndex] = redIsNext ? "Red" : "Blue";
-        //onPlay(nextSquares, redIsNext, columnIndex, rowIndex);
         onPlay(columnIndex, rowIndex);
     }
 
