@@ -8,9 +8,7 @@ export default function CustomisedGame() {
     const [winner, setWinner] = useState(null);
     const [gameCustomised, setGameCustomised] = useState(false);
 
-    const WS_URL = `ws://51.20.87.128:8080`;
-
-    const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
+    const { sendJsonMessage, lastJsonMessage } = useWebSocket(process.env.REACT_APP_WS_URL, {
         share: true,
     });
 

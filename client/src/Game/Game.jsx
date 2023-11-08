@@ -2,9 +2,8 @@ import useWebSocket from "react-use-websocket";
 import Board from "../Board/Board";
 
 export default function Game({ squares, winner }) {
-    const WS_URL = `ws://51.20.87.128:8080`;
 
-    const { sendJsonMessage } = useWebSocket(WS_URL, {
+    const { sendJsonMessage } = useWebSocket(process.env.REACT_APP_WS_URL, {
         share: true,
     });
 
