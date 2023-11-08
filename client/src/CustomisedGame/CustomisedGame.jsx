@@ -1,24 +1,32 @@
 import "./CustomisedGame.css";
-import { useState } from "react";
+import useWebSocket from "react-use-websocket";
+import { useCallback, useState, useEffect } from "react";
 import Game from "../Game/Game";
 
 export default function CustomisedGame() {
-    const [connectNumber, setConnectNumber] = useState(null);
     const [squares, setSquares] = useState(null);
     const [winner, setWinner] = useState(null);
     const [gameCustomised, setGameCustomised] = useState(false);
 
-    const handlePlay = (nextSquares, nextWinner) => {
+    const WS_URL = `ws://51.20.87.128:8080`;
+
+    const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
+        share: true,
+    });
+
+    const handlePlay = useCallback((nextSquares, nextWinner) => {
         setSquares(nextSquares);
         setWinner(nextWinner);
-    }
+    }, [setSquares, setWinner]);
 
-    const handleRefresh = (nextSquares) => {
-        if (winner) {
-            setWinner(null);
+    useEffect(() => {
+        if (lastJsonMessage) {
+            handlePlay(lastJsonMessage.board, lastJsonMessage.winner);
+            if (lastJsonMessage.gameCustomised) {
+                setGameCustomised(true);
+            }
         }
-        setSquares(nextSquares);
-    }
+    }, [lastJsonMessage, handlePlay]);
 
     const handleBoardCustomisationSubmit = (e) => {
         e.preventDefault();
@@ -27,13 +35,11 @@ export default function CustomisedGame() {
         const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries());
 
-        const numberOfColumns = Number(formJson.numberOfColumns);
-        const numberOfRows = Number(formJson.numberOfRows);
-        const emptyBoard = new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White"));
-
-        setConnectNumber(Number(formJson.connectNumber));
-        setGameCustomised(true);
-        handleRefresh(emptyBoard);
+        sendJsonMessage({
+            numberOfColumns: Number(formJson.numberOfColumns),
+            numberOfRows: Number(formJson.numberOfRows),
+            numberToConnect: Number(formJson.connectNumber)
+        });
     }
 
     let status;
@@ -48,7 +54,7 @@ export default function CustomisedGame() {
             resetStatus = "Play Again";
         }
     } else {
-        resetStatus = "Play"
+        resetStatus = "Play";
     }
 
     return (
@@ -78,11 +84,17 @@ export default function CustomisedGame() {
                     </label>
                 </div>
                 <div className="winnerStatus">{status}</div>
-                <div className="resetButtonContainer">
+                {gameCustomised && <div className="resetButtonContainer">
                     <button className="reset" type="submit">{resetStatus}</button >
-                </div >
+                </div >}
+                {!gameCustomised && <div className="twoPlayerButtonContainer">
+                    <button className="reset" type="submit">Play Online</button >
+                </div >}
+                {!gameCustomised && <div className="onePlayerButtonContainer">
+                    <button className="reset" type="submit">Pass and Play</button >
+                </div >}
             </form>
-            {gameCustomised && < Game squares={squares} connectNumber={connectNumber} handlePlay={handlePlay} winner={winner} />}
+            {gameCustomised && < Game squares={squares} winner={winner} />}
         </>
     );
 }

@@ -21,6 +21,18 @@
     border: 5px solid white;
 }
 
+.twoPlayerButtonContainer {
+    display: flex;
+    justify-content: center;
+    border: 5px solid white;
+}
+
+.onePlayerButtonContainer {
+    display: flex;
+    justify-content: center;
+    border: 5px solid white;
+}
+
 .reset {
     font-size: large;
 }

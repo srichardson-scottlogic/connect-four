@@ -1,7 +1,7 @@
 import './Board.css';
 import Square from '../Square/Square';
 
-export default function Board({ redIsNext, squares, onPlay, winner }) {
+export default function Board({ squares, onPlay, winner }) {
     const numberOfColumns = squares.length;
     const numberOfRows = squares[0].length;
     const handlePlay = (columnIndex) => {
@@ -9,10 +9,8 @@ export default function Board({ redIsNext, squares, onPlay, winner }) {
             || winner) {
             return;
         }
-        const nextSquares = squares.slice();
-        const rowIndex = calculateNextSquare(nextSquares[columnIndex]);
-        nextSquares[columnIndex][rowIndex] = redIsNext ? "Red" : "Blue";
-        onPlay(nextSquares, redIsNext, columnIndex, rowIndex);
+        const rowIndex = calculateNextSquare(squares[columnIndex]);
+        onPlay(columnIndex, rowIndex);
     }
 
     const grid = [];
