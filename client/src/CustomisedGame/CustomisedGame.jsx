@@ -34,6 +34,7 @@ export default function CustomisedGame() {
         const formJson = Object.fromEntries(formData.entries());
 
         sendJsonMessage({
+            action: "customise",
             numberOfColumns: Number(formJson.numberOfColumns),
             numberOfRows: Number(formJson.numberOfRows),
             numberToConnect: Number(formJson.connectNumber)

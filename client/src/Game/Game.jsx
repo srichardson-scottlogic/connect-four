@@ -9,7 +9,7 @@ export default function Game({ squares, winner }) {
 
     const onPlay = (columnIndex, rowIndex) => {
         sendJsonMessage({
-            play: true,
+            action: "play",
             columnIndex: columnIndex,
             rowIndex: rowIndex
         });
