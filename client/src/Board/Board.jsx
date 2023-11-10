@@ -1,12 +1,14 @@
 import './Board.css';
 import Square from '../Square/Square';
 
-export default function Board({ squares, onPlay, winner }) {
+export default function Board({ squares, onPlay, winner, playerColour, redIsNext }) {
     const numberOfColumns = squares.length;
     const numberOfRows = squares[0].length;
     const handlePlay = (columnIndex) => {
         if (squares[columnIndex][numberOfRows - 1] !== "White"
-            || winner) {
+            || winner
+            || (redIsNext && playerColour === "Blue")
+            || (!redIsNext && playerColour === "Red")) {
             return;
         }
         const rowIndex = calculateNextSquare(squares[columnIndex]);

@@ -1,81 +1,3 @@
-import { WebSocketServer } from "ws";
-import { v4 } from "uuid";
-
-const port = 8080;
-const wsServer = new WebSocketServer({ port: { port } });
-const connections = {};
-const users = {};
-
-let isRedNext = true;
-let numberToConnect;
-let board;
-
-const handleMessage = (bytes) => {
-    const message = JSON.parse(bytes.toString());
-    if (message.numberOfColumns
-        && message.numberOfRows
-        && message.numberToConnect) {
-        numberToConnect = message.numberToConnect;
-        board = new Array(message.numberOfColumns).fill(0).map(() => new Array(message.numberOfRows).fill("White"));
-        broadcast(null, true);
-    }
-
-    if (message.play) {
-        const columnIndex = message.columnIndex;
-        const rowIndex = message.rowIndex;
-
-        board[columnIndex][rowIndex] = isRedNext ? "Blue" : "Red";
-        isRedNext = !isRedNext;
-        const winner = calculateWinner(board, columnIndex, rowIndex, numberToConnect);
-        broadcast(winner, null);
-    }
-}
-
-const handleClose = uuid => {
-    console.log(`${users[uuid].state.colour} disconnected`);
-
-    delete connections[uuid];
-    delete users[uuid];
-}
-
-const broadcast = (winner, gameCustomised) => {
-    Object.keys(connections)
-        .forEach(uuid => {
-            const connection = connections[uuid];
-            const message = JSON.stringify({
-                board: board,
-                isRedNext: isRedNext,
-                winner: winner,
-                gameCustomised: gameCustomised
-            });
-            console.log(`Broadcasting to user ${uuid}`);
-            connection.send(message);
-        })
-}
-
-wsServer.on('connection', (connection, request) => {
-    const playerColour = isRedNext ? "Red" : "Blue";
-    isRedNext = !isRedNext;
-
-    console.log(`${playerColour} connected`);
-
-    const uuid = v4();
-    connections[uuid] = connection;
-
-    users[uuid] = {
-        state: {
-            colour: playerColour
-        }
-    };
-
-    broadcast();
-
-    connection.on('message', message => handleMessage(message));
-    connection.on('close', () => handleClose(uuid));
-});
-
-console.log(`WebSocket server is running on port ${port}`);
-
 const calculateWinner = (squares, columnIndex, rowIndex, connectNumber) => {
     const colour = squares[columnIndex][rowIndex];
     const width = squares.length;
@@ -154,3 +76,5 @@ const calculateWinner = (squares, columnIndex, rowIndex, connectNumber) => {
     //If there's no winner return null
     return null;
 }
+
+export default { calculateWinner };

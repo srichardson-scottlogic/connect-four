@@ -1,21 +1,21 @@
 import useWebSocket from "react-use-websocket";
 import Board from "../Board/Board";
 
-export default function Game({ squares, winner }) {
-    const WS_URL = `ws://51.20.87.128:8080`;
+export default function Game({ squares, winner, playerColour, redIsNext }) {
+    //console.log("Game customised"); //TODO: why is this being logged three (or six) times?
 
-    const { sendJsonMessage } = useWebSocket(WS_URL, {
+    const { sendJsonMessage } = useWebSocket(process.env.REACT_APP_WS_URL, {
         share: true,
     });
 
     const onPlay = (columnIndex, rowIndex) => {
         sendJsonMessage({
-            play: true,
+            action: "play",
             columnIndex: columnIndex,
             rowIndex: rowIndex
         });
     }
     return (
-        <Board squares={squares} onPlay={onPlay} winner={winner} />
+        <Board squares={squares} onPlay={onPlay} winner={winner} playerColour={playerColour} redIsNext={redIsNext} />
     );
 }
