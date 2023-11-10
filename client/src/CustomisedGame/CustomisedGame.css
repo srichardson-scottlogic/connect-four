@@ -1,3 +1,20 @@
+.gameInfoContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.gameId {
+    border: 10px solid white;
+}
+
+.playerColour {
+    border: 10px solid white;
+}
+
+.whoIsNext {
+    border: 10px solid white;
+}
+
 .customiseGame {
     display: flex;
     justify-content: center;

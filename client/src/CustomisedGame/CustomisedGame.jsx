@@ -8,15 +8,18 @@ export default function CustomisedGame() {
     const [winner, setWinner] = useState(null);
     const [gameCustomised, setGameCustomised] = useState(false);
     const [roomId, setRoomId] = useState(null);
+    const [playerColour, setPlayerColour] = useState(null);
+    const [redIsNext, setRedIsNext] = useState(null);
 
     const { sendJsonMessage, lastJsonMessage } = useWebSocket(process.env.REACT_APP_WS_URL, {
         share: true,
     });
 
-    const handlePlay = useCallback((nextSquares, nextWinner) => {
+    const handlePlay = useCallback((nextSquares, nextWinner, redIsNext) => {
         setSquares(nextSquares);
         setWinner(nextWinner);
-    }, [setSquares, setWinner]);
+        setRedIsNext(redIsNext);
+    }, [setSquares, setWinner, setRedIsNext]);
 
     const handleJoinGame = (e) => {
         e.preventDefault();
@@ -42,16 +45,17 @@ export default function CustomisedGame() {
 
                 case "join":
                     setRoomId(lastJsonMessage.roomId);
-                    handlePlay(lastJsonMessage.board, lastJsonMessage.winner);
+                    handlePlay(lastJsonMessage.board, lastJsonMessage.winner, lastJsonMessage.redIsNext);
+                    setPlayerColour(lastJsonMessage.playerColour);
                     setGameCustomised(true);
                     break;
 
                 case "customise":
-                    handlePlay(lastJsonMessage.board, lastJsonMessage.winner);
+                    handlePlay(lastJsonMessage.board, lastJsonMessage.winner, lastJsonMessage.redIsNext);
                     break;
 
                 case "play":
-                    handlePlay(lastJsonMessage.board, lastJsonMessage.winner);
+                    handlePlay(lastJsonMessage.board, lastJsonMessage.winner, lastJsonMessage.redIsNext);
                     break;
 
                 default:
@@ -99,9 +103,20 @@ export default function CustomisedGame() {
         resetStatus = "Play";
     }
 
+    let whoIsNext;
+    if (redIsNext && playerColour === "Red"
+        || (!redIsNext && playerColour === "Blue")) {
+        whoIsNext = "It's Your Go!"
+    }
+    else whoIsNext = `It's ${redIsNext ? 'Red' : 'Blue'}'s Go!`
+
     return (
         <>
-            {roomId && <div className="gameId">Game ID = {roomId}</div>}
+            <div className="gameInfoContainer">
+                {roomId && <div className="gameId">Game ID = {roomId}</div>}
+                {gameCustomised && <div className="playerColour">You are {playerColour}</div>}
+                {gameCustomised && <div className="whoIsNext">{whoIsNext}</div>}
+            </div>
             <form className="customiseGame" onSubmit={handleBoardCustomisationSubmit}>
                 <div className="formContainer">
                     <label>
@@ -135,7 +150,7 @@ export default function CustomisedGame() {
                 </div >}
                 {/* {!gameCustomised && <div className="onePlayerButtonContainer">
                     <button className="reset" type="submit" onClick={handleBoardCustomisationSubmit}>Pass and Play</button >
-                </div >} */}
+                </div >} TODO: Implement Pass and Play */}
             </form>
             {!gameCustomised && <form className="joinExistingGame" onSubmit={handleJoinGame}>
                 <div className="joinGameContainer">
@@ -148,7 +163,7 @@ export default function CustomisedGame() {
                     <button className="join" type="submit">Join</button >
                 </div >
             </form>}
-            {gameCustomised && < Game squares={squares} winner={winner} roomId={roomId} />}
+            {gameCustomised && < Game squares={squares} winner={winner} roomId={roomId} playerColour={playerColour} redIsNext={redIsNext} />}
         </>
     );
 }

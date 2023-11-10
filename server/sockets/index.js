@@ -59,7 +59,7 @@ const createRoom = (userId, numberOfColumns, numberOfRows, numberToConnect) => {
         board: new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White")),
         numberToConnect: numberToConnect,
         winner: null,
-        isRedNext: true
+        redIsNext: true
     };
     users[userId] = {
         roomId: roomId,
@@ -96,10 +96,10 @@ const customiseRoom = (userId, numberToConnect, numberOfColumns, numberOfRows) =
 const handlePlay = (userId, columnIndex, rowIndex) => {
     const room = rooms[users[userId].roomId];
     const playerColour = users[userId].colour;
-    if ((room.isRedNext && playerColour === "Red")
-        || (!room.isRedNext && playerColour === "Blue")) {
-        room.board[columnIndex][rowIndex] = room.isRedNext ? "Red" : "Blue";
-        room.isRedNext = !room.isRedNext;
+    if ((room.redIsNext && playerColour === "Red")
+        || (!room.redIsNext && playerColour === "Blue")) {
+        room.board[columnIndex][rowIndex] = room.redIsNext ? "Red" : "Blue";
+        room.redIsNext = !room.redIsNext;
         room.winner = winnerHelper.calculateWinner(room.board, columnIndex, rowIndex, room.numberToConnect);
     }
     else console.warn(`It is not ${playerColour}'s turn!`);
@@ -109,15 +109,18 @@ const broadcast = (action, roomId) => {
     const room = rooms[roomId];
     room.users.forEach(userId => {
         const connection = connections[userId];
-        const message = JSON.stringify({
+        const message = {
             roomId: roomId,
             board: room.board,
-            isRedNext: room.isRedNext,
+            redIsNext: room.redIsNext,
             winner: room.winner,
             action: action
-        });
+        };
+        if (action === "join") {
+            message.playerColour = users[userId].colour;
+        }
         console.log(`Broadcasting to user ${userId} in room ${roomId}`);
-        connection.send(message);
+        connection.send(JSON.stringify(message));
     })
 }
 
