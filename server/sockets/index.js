@@ -7,37 +7,32 @@ const port = 8080;
 const wsServer = new WebSocketServer({ port: { port } });
 const connections = {};
 const users = {};
-
-const maxClients = 2;
 const rooms = {};
+const maxPlayers = 2;
 
-let isRedNext = true;
-let numberToConnect;
-let board;
-
-const handleMessage = (bytes) => {
+const handleMessage = (bytes, userId) => {
     const message = JSON.parse(bytes.toString());
     const action = message.action;
 
     switch (action) {
         case "create":
+            const roomId = createRoom(userId, message.numberOfColumns, message.numberOfRows, message.numberToConnect);
+            broadcast("create", roomId);
+            break;
 
+        case "join":
+            joinRoom(message.roomId, userId);
+            broadcast("join", message.roomId);
             break;
 
         case "customise":
-            numberToConnect = message.numberToConnect;
-            board = new Array(message.numberOfColumns).fill(0).map(() => new Array(message.numberOfRows).fill("White"));
-            broadcast(null, true);
+            customiseRoom(userId, message.numberToConnect, message.numberOfColumns, message.numberOfRows);
+            broadcast("customise", users[userId].roomId);
             break;
 
         case "play":
-            const columnIndex = message.columnIndex;
-            const rowIndex = message.rowIndex;
-
-            board[columnIndex][rowIndex] = isRedNext ? "Blue" : "Red";
-            isRedNext = !isRedNext;
-            const winner = winnerHelper.calculateWinner(board, columnIndex, rowIndex, numberToConnect);
-            broadcast(winner, null);
+            handlePlay(userId, message.columnIndex, message.rowIndex);
+            broadcast("play", users[userId].roomId);
             break;
 
         default:
@@ -46,51 +41,94 @@ const handleMessage = (bytes) => {
     }
 }
 
-const handleClose = uuid => {
-    console.log(`${users[uuid].state.colour} disconnected`);
+const handleClose = userId => {
+    const roomId = users[userId].roomId;
+    const indexOfUserInRoomUsers = rooms[roomId].users.indexOf(userId);
+    rooms[roomId].users.splice(indexOfUserInRoomUsers, indexOfUserInRoomUsers);
 
-    delete connections[uuid];
-    delete users[uuid];
+    delete connections[userId];
+    delete users[userId];
+
+    console.log(`${userId} disconnected`);
 }
 
-const createRoom = () => {
+const createRoom = (userId, numberOfColumns, numberOfRows, numberToConnect) => {
     const roomId = roomIdHelper.genId(5);
+    rooms[roomId] = {
+        users: [userId],
+        board: new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White")),
+        numberToConnect: numberToConnect,
+        winner: null,
+        isRedNext: true
+    };
+    users[userId] = {
+        roomId: roomId,
+        colour: "Red"
+    };
+    return roomId;
 }
 
-const broadcast = (winner, gameCustomised) => {
-    Object.keys(connections)
-        .forEach(uuid => {
-            const connection = connections[uuid];
-            const message = JSON.stringify({
-                board: board,
-                isRedNext: isRedNext,
-                winner: winner,
-                gameCustomised: gameCustomised
-            });
-            console.log(`Broadcasting to user ${uuid}`);
-            connection.send(message);
-        })
+const joinRoom = (roomId, userId) => {
+    if (!Object.keys(rooms).includes(roomId)) {
+        console.warn(`Room ${roomId} does not exist!`);
+        return;
+    }
+
+    if (rooms[roomId].length >= maxPlayers) {
+        console.warn(`Room ${roomId} is full!`);
+        return;
+    }
+
+    rooms[roomId].users.push(userId);
+    users[userId] = {
+        roomId: roomId,
+        colour: "Blue"
+    };
+}
+
+const customiseRoom = (userId, numberToConnect, numberOfColumns, numberOfRows) => {
+    const room = rooms[users[userId].roomId];
+    room.board = new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White"));
+    room.numberToConnect = numberToConnect;
+    room.winner = null;
+}
+
+const handlePlay = (userId, columnIndex, rowIndex) => {
+    const room = rooms[users[userId].roomId];
+    const playerColour = users[userId].colour;
+    if ((room.isRedNext && playerColour === "Red")
+        || (!room.isRedNext && playerColour === "Blue")) {
+        room.board[columnIndex][rowIndex] = room.isRedNext ? "Red" : "Blue";
+        room.isRedNext = !room.isRedNext;
+        room.winner = winnerHelper.calculateWinner(room.board, columnIndex, rowIndex, room.numberToConnect);
+    }
+    else console.warn(`It is not ${playerColour}'s turn!`);
+}
+
+const broadcast = (action, roomId) => {
+    const room = rooms[roomId];
+    room.users.forEach(userId => {
+        const connection = connections[userId];
+        const message = JSON.stringify({
+            roomId: roomId,
+            board: room.board,
+            isRedNext: room.isRedNext,
+            winner: room.winner,
+            action: action
+        });
+        console.log(`Broadcasting to user ${userId} in room ${roomId}`);
+        connection.send(message);
+    })
 }
 
 wsServer.on('connection', (connection) => {
-    const playerColour = isRedNext ? "Red" : "Blue";
-    isRedNext = !isRedNext;
+    const userId = v4();
+    connections[userId] = connection;
 
-    console.log(`${playerColour} connected`);
+    console.log(`${userId} connected`);
 
-    const uuid = v4();
-    connections[uuid] = connection;
-
-    users[uuid] = {
-        state: {
-            colour: playerColour
-        }
-    };
-
-    broadcast();
-
-    connection.on('message', message => handleMessage(message));
-    connection.on('close', () => handleClose(uuid));
+    connection.on('message', message => handleMessage(message, userId));
+    connection.on('close', () => handleClose(userId));
 });
 
 console.log(`WebSocket server is running on port ${port}`);
