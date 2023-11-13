@@ -18,7 +18,7 @@
     "test": "react-scripts test",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "aws-deploy": "npm run build && aws s3 sync build s3://connect-four-srichardson"
+    "aws-deploy": "deploy.sh"
   },
   "eslintConfig": {
     "extends": [

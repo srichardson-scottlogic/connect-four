@@ -21,8 +21,9 @@ const handleMessage = (bytes, userId) => {
             break;
 
         case "join":
-            joinRoom(message.roomId, userId);
-            broadcast("join", message.roomId);
+            if (joinRoom(message.roomId, userId)) {
+                broadcast("join", message.roomId);
+            };
             break;
 
         case "customise":
@@ -71,12 +72,12 @@ const createRoom = (userId, numberOfColumns, numberOfRows, numberToConnect) => {
 const joinRoom = (roomId, userId) => {
     if (!Object.keys(rooms).includes(roomId)) {
         console.warn(`Room ${roomId} does not exist!`);
-        return;
+        return false;
     }
 
     if (rooms[roomId].length >= maxPlayers) {
         console.warn(`Room ${roomId} is full!`);
-        return;
+        return false;
     }
 
     rooms[roomId].users.push(userId);
@@ -84,6 +85,7 @@ const joinRoom = (roomId, userId) => {
         roomId: roomId,
         colour: "Blue"
     };
+    return true;
 }
 
 const customiseRoom = (userId, numberToConnect, numberOfColumns, numberOfRows) => {
