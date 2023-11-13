@@ -6,7 +6,7 @@ import roomIdHelper from "../helpers/roomIdHelper.js";
 const port = 8080;
 const wsServer = new WebSocketServer({ port: { port } });
 const connections = {};
-const users = {};
+const roomUsers = {};
 const rooms = {};
 const maxPlayers = 2;
 
@@ -28,12 +28,12 @@ const handleMessage = (bytes, userId) => {
 
         case "customise":
             customiseRoom(userId, message.numberToConnect, message.numberOfColumns, message.numberOfRows);
-            broadcast("customise", users[userId].roomId);
+            broadcast("customise", roomUsers[userId].roomId);
             break;
 
         case "play":
             handlePlay(userId, message.columnIndex, message.rowIndex);
-            broadcast("play", users[userId].roomId);
+            broadcast("play", roomUsers[userId].roomId);
             break;
 
         default:
@@ -43,12 +43,21 @@ const handleMessage = (bytes, userId) => {
 }
 
 const handleClose = userId => {
-    const roomId = users[userId].roomId;
-    const indexOfUserInRoomUsers = rooms[roomId].users.indexOf(userId);
-    rooms[roomId].users.splice(indexOfUserInRoomUsers, indexOfUserInRoomUsers);
+    if (roomUsers[userId]) {
+        const roomId = roomUsers[userId].roomId;
+        const usersInRoom = [...rooms[roomId].roomUsers];
+
+        const remainingUsersInRoom = usersInRoom.filter((uuid) => {
+            return uuid !== userId;
+        })
+        if (remainingUsersInRoom.length === 0) {
+            delete rooms[roomId];
+        }
+        else rooms[roomId].roomUsers = remainingUsersInRoom;
+    }
 
     delete connections[userId];
-    delete users[userId];
+    delete roomUsers[userId];
 
     console.log(`${userId} disconnected`);
 }
@@ -56,13 +65,13 @@ const handleClose = userId => {
 const createRoom = (userId, numberOfColumns, numberOfRows, numberToConnect) => {
     const roomId = roomIdHelper.genId(5);
     rooms[roomId] = {
-        users: [userId],
+        roomUsers: [userId],
         board: new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White")),
         numberToConnect: numberToConnect,
         winner: null,
         redIsNext: true
     };
-    users[userId] = {
+    roomUsers[userId] = {
         roomId: roomId,
         colour: "Red"
     };
@@ -80,8 +89,8 @@ const joinRoom = (roomId, userId) => {
         return false;
     }
 
-    rooms[roomId].users.push(userId);
-    users[userId] = {
+    rooms[roomId].roomUsers.push(userId);
+    roomUsers[userId] = {
         roomId: roomId,
         colour: "Blue"
     };
@@ -89,15 +98,15 @@ const joinRoom = (roomId, userId) => {
 }
 
 const customiseRoom = (userId, numberToConnect, numberOfColumns, numberOfRows) => {
-    const room = rooms[users[userId].roomId];
+    const room = rooms[roomUsers[userId].roomId];
     room.board = new Array(numberOfColumns).fill(0).map(() => new Array(numberOfRows).fill("White"));
     room.numberToConnect = numberToConnect;
     room.winner = null;
 }
 
 const handlePlay = (userId, columnIndex, rowIndex) => {
-    const room = rooms[users[userId].roomId];
-    const playerColour = users[userId].colour;
+    const room = rooms[roomUsers[userId].roomId];
+    const playerColour = roomUsers[userId].colour;
     if ((room.redIsNext && playerColour === "Red")
         || (!room.redIsNext && playerColour === "Blue")) {
         room.board[columnIndex][rowIndex] = room.redIsNext ? "Red" : "Blue";
@@ -109,7 +118,7 @@ const handlePlay = (userId, columnIndex, rowIndex) => {
 
 const broadcast = (action, roomId) => {
     const room = rooms[roomId];
-    room.users.forEach(userId => {
+    room.roomUsers.forEach(userId => {
         const connection = connections[userId];
         const message = {
             roomId: roomId,
@@ -119,7 +128,7 @@ const broadcast = (action, roomId) => {
             action: action
         };
         if (action === "join") {
-            message.playerColour = users[userId].colour;
+            message.playerColour = roomUsers[userId].colour;
         }
         console.log(`Broadcasting to user ${userId} in room ${roomId}`);
         connection.send(JSON.stringify(message));
