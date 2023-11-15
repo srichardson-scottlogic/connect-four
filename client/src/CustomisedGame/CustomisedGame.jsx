@@ -90,7 +90,7 @@ export default function CustomisedGame() {
 
     let status;
     if (winner) {
-        status = winner === "Draw" ? "It's a Draw!" : "Winner is " + winner + "!";
+        status = winner === "Draw" ? "It's a draw 🥱" : (playerColour === winner) ? "Congratulations, you won 😁" : "You lost, better luck next time 😓";
     }
 
     let resetStatus;
@@ -108,14 +108,14 @@ export default function CustomisedGame() {
         || (!redIsNext && playerColour === "Blue")) {
         whoIsNext = "It's Your Go!"
     }
-    else whoIsNext = `It's ${redIsNext ? 'Red' : 'Blue'}'s Go!`
+    else whoIsNext = `It's ${redIsNext ? 'Red' : 'Blue'}'s Go!`;
 
     return (
         <>
             <div className="gameInfoContainer">
                 {roomId && <div className="gameId">Game ID = {roomId}</div>}
                 {gameCustomised && <div className="playerColour">You are {playerColour}</div>}
-                {gameCustomised && <div className="whoIsNext">{whoIsNext}</div>}
+                {(gameCustomised && !winner) && <div className="whoIsNext">{whoIsNext}</div>}
             </div>
             <form className="customiseGame" onSubmit={handleBoardCustomisationSubmit}>
                 <div className="formContainer">
@@ -146,21 +146,19 @@ export default function CustomisedGame() {
                     <button className="reset" type="submit">{resetStatus}</button >
                 </div >}
                 {!gameCustomised && <div className="twoPlayerButtonContainer">
-                    <button className="reset" type="submit">Play Online</button >
+                    <button className="reset" type="submit">Create Online Room</button >
                 </div >}
                 {/* {!gameCustomised && <div className="onePlayerButtonContainer">
                     <button className="reset" type="submit" onClick={handleBoardCustomisationSubmit}>Pass and Play</button >
                 </div >} TODO: Implement Pass and Play */}
             </form>
-            {!gameCustomised && <form className="joinExistingGame" onSubmit={handleJoinGame}>
+            {(!gameCustomised && !roomId) && <form className="joinExistingGame" onSubmit={handleJoinGame}>
                 <div className="joinGameContainer">
                     <label>
                         Game Room ID:
                         <input name="gameRoomId" />
                     </label>
-                </div>
-                <div className="joinGameButtonContainer">
-                    <button className="join" type="submit">Join</button >
+                    <button className="join" type="submit">Join Existing Game</button >
                 </div >
             </form>}
             {gameCustomised && < Game squares={squares} winner={winner} roomId={roomId} playerColour={playerColour} redIsNext={redIsNext} />}

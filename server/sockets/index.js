@@ -83,13 +83,14 @@ const joinRoom = (roomId, userId) => {
         console.warn(`Room ${roomId} does not exist!`);
         return false;
     }
+    const room = rooms[roomId];
 
-    if (rooms[roomId].length >= maxPlayers) {
+    if (room.roomUsers.length >= maxPlayers) {
         console.warn(`Room ${roomId} is full!`);
         return false;
     }
 
-    rooms[roomId].roomUsers.push(userId);
+    room.roomUsers.push(userId);
     roomUsers[userId] = {
         roomId: roomId,
         colour: "Blue"

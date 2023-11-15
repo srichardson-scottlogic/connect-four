@@ -53,3 +53,12 @@
 .reset {
     font-size: large;
 }
+
+.joinGameContainer {
+    display: flex;
+    justify-content: left;
+}
+
+.join {
+    font-size: large;
+}

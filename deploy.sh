@@ -1,4 +1,4 @@
-#! bash
+#!/bin/bash
 
-(cd server; ./deploy.sh)
-(cd client; ./deploy.sh)
+(cd server || exit; ./deploy.sh)
+(cd client || exit; ./deploy.sh)
