@@ -1,3 +1,12 @@
+.text {
+    font-size: large;
+    text-align: center;
+}
+
+.buttonText {
+    font-size: large;
+}
+
 .gameInfoContainer {
     display: flex;
     justify-content: center;
@@ -16,12 +25,6 @@
 }
 
 .customiseGame {
-    display: flex;
-    justify-content: center;
-    display: inline;
-}
-
-.formContainer {
     display: flex;
     justify-content: center;
 }
@@ -44,21 +47,17 @@
     border: 5px solid white;
 }
 
+.joinTwoPlayerGameContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.gameRoomId {
+    width: 175px;
+}
+
 .onePlayerButtonContainer {
     display: flex;
     justify-content: center;
     border: 5px solid white;
-}
-
-.reset {
-    font-size: large;
-}
-
-.joinGameContainer {
-    display: flex;
-    justify-content: left;
-}
-
-.join {
-    font-size: large;
 }
