@@ -1,0 +1,29 @@
+.text {
+    font-size: large;
+    text-align: center;
+}
+
+.buttonText {
+    font-size: large;
+}
+
+.twoPlayerButtonContainer {
+    display: flex;
+    justify-content: center;
+    border: 5px solid white;
+}
+
+.joinTwoPlayerGameContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.gameRoomId {
+    width: 175px;
+}
+
+.onePlayerButtonContainer {
+    display: flex;
+    justify-content: center;
+    border: 5px solid white;
+}
