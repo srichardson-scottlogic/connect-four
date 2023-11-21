@@ -1,29 +1,29 @@
 .text {
-    font-size: large;
-    text-align: center;
+	font-size: large;
+	text-align: center;
 }
 
 .buttonText {
-    font-size: large;
+	font-size: large;
 }
 
 .twoPlayerButtonContainer {
-    display: flex;
-    justify-content: center;
-    border: 5px solid white;
+	display: flex;
+	justify-content: center;
+	border: 5px solid white;
 }
 
 .joinTwoPlayerGameContainer {
-    display: flex;
-    justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 
 .gameRoomId {
-    width: 175px;
+	width: 175px;
 }
 
 .onePlayerButtonContainer {
-    display: flex;
-    justify-content: center;
-    border: 5px solid white;
+	display: flex;
+	justify-content: center;
+	border: 5px solid white;
 }

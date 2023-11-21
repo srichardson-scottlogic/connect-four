@@ -1,11 +1,11 @@
 .board {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 90vh;
 }
 
 .board-column {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }

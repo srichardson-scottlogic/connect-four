@@ -1,21 +1,21 @@
 .gameInfoContainer {
-    display: flex;
-    justify-content: center;
-    font-size: large;
+	display: flex;
+	justify-content: center;
+	font-size: large;
 }
 
 .gameId {
-    border: 10px solid white;
+	border: 10px solid white;
 }
 
 .shareText {
-    border: 10px solid white;
+	border: 10px solid white;
 }
 
 .playerColour {
-    border: 10px solid white;
+	border: 10px solid white;
 }
 
 .whoIsNext {
-    border: 10px solid white;
+	border: 10px solid white;
 }
