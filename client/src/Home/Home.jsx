@@ -18,6 +18,7 @@ export default function Home() {
 	const [numberOfColumns, setNumberOfColumns] = useState(7);
 	const [numberOfRows, setNumberOfRows] = useState(6);
 	const [numberToConnect, setNumberToConnect] = useState(4);
+	const [customiseGameErrors, setCustomiseGameErrors] = useState({});
 
 	const { sendJsonMessage, lastJsonMessage } = useWebSocket(
 		process.env.REACT_APP_WS_URL,
@@ -27,18 +28,20 @@ export default function Home() {
 	);
 
 	const handleBoardCustomisationSubmit = () => {
-		const message = {
-			action: "customise",
-			numberOfColumns: numberOfColumns,
-			numberOfRows: numberOfRows,
-			numberToConnect: numberToConnect,
-		};
+		if (validateBoardCustomisationSubmit()) {
+			const message = {
+				action: "customise",
+				numberOfColumns: Number(numberOfColumns),
+				numberOfRows: Number(numberOfRows),
+				numberToConnect: Number(numberToConnect),
+			};
 
-		if (!gameCustomised) {
-			message.action = "create";
+			if (!gameCustomised) {
+				message.action = "create";
+			}
+
+			sendJsonMessage(message);
 		}
-
-		sendJsonMessage(message);
 	};
 
 	const handlePlay = useCallback(
@@ -89,6 +92,28 @@ export default function Home() {
 		}
 	}, [lastJsonMessage, handlePlay]);
 
+	const validateBoardCustomisationSubmit = () => {
+		const errors = { ...customiseGameErrors };
+
+		validateFieldIsNotNull(errors, numberOfColumns, "numberOfColumns");
+		validateFieldIsNotNull(errors, numberOfRows, "numberOfRows");
+		validateFieldIsNotNull(errors, numberToConnect, "numberToConnect");
+
+		if (!(Object.keys(errors).length === 0)) {
+			setCustomiseGameErrors(errors);
+			return false;
+		}
+
+		return true;
+	};
+
+	const validateFieldIsNotNull = (errors, field, fieldName) => {
+		if (!field) {
+			errors[fieldName] = "cannot be empty";
+		}
+		return errors;
+	};
+
 	return (
 		<>
 			<GameInformation
@@ -105,6 +130,8 @@ export default function Home() {
 				setNumberOfRows={setNumberOfRows}
 				numberToConnect={numberToConnect}
 				setNumberToConnect={setNumberToConnect}
+				customiseGameErrors={customiseGameErrors}
+				setCustomiseGameErrors={setCustomiseGameErrors}
 			/>
 			<WinnerStatus winner={winner} playerColour={playerColour} />
 			{!gameCustomised && !roomId && (

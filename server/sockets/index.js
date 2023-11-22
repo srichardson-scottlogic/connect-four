@@ -102,10 +102,15 @@ const createRoom = (userId, numberOfColumns, numberOfRows, numberToConnect) => {
 const joinRoom = (roomId, userId) => {
 	const room = rooms[roomId];
 
+	let colour;
+	if (room.roomUsers.length > 0) {
+		colour = roomUsers[room.roomUsers[0]].colour === "Red" ? "Blue" : "Red";
+	} else colour = "Red";
+
 	room.roomUsers.push(userId);
 	roomUsers[userId] = {
 		roomId: roomId,
-		colour: "Blue",
+		colour: colour,
 	};
 };
 

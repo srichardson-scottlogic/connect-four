@@ -1,5 +1,4 @@
 import "./CustomiseGameForm.css";
-import { useState } from "react";
 
 export default function CustomiseGameForm({
 	numberOfColumns,
@@ -8,8 +7,38 @@ export default function CustomiseGameForm({
 	setNumberOfRows,
 	numberToConnect,
 	setNumberToConnect,
+	customiseGameErrors,
+	setCustomiseGameErrors,
 }) {
-	const [errors, setErrors] = useState({});
+	const validateBoardDimensions = (
+		dimension,
+		dimensionValue,
+		messageForTooSmall,
+	) => {
+		const gameCustomisationErrors = { ...customiseGameErrors };
+
+		if (!dimensionValue) {
+			delete gameCustomisationErrors[dimension];
+			setCustomiseGameErrors(gameCustomisationErrors);
+			return true;
+		}
+
+		if (!dimensionValue.match(/^\d+$/)) {
+			gameCustomisationErrors[dimension] = "please enter a positive number";
+			setCustomiseGameErrors(gameCustomisationErrors);
+			return false;
+		}
+
+		if (Number(dimensionValue) < 3) {
+			gameCustomisationErrors[dimension] = messageForTooSmall;
+			setCustomiseGameErrors(gameCustomisationErrors);
+			return false;
+		}
+
+		delete gameCustomisationErrors[dimension];
+		setCustomiseGameErrors(gameCustomisationErrors);
+		return true;
+	};
 
 	return (
 		<div className="customiseGame">
@@ -19,9 +48,16 @@ export default function CustomiseGameForm({
 					<input
 						name="numberOfColumns"
 						value={numberOfColumns}
-						onInput={(e) => setNumberOfColumns(Number(e.target.value))}
+						onInput={(e) => {
+							setNumberOfColumns(e.target.value);
+							validateBoardDimensions(
+								"numberOfColumns",
+								e.target.value,
+								"the board would be too small!",
+							);
+						}}
 					/>
-					<div className="error">{errors["numberOfColumns"]}</div>
+					<div className="error">{customiseGameErrors["numberOfColumns"]}</div>
 				</div>
 			</div>
 			<div className="inputFieldContainer">
@@ -30,9 +66,16 @@ export default function CustomiseGameForm({
 					<input
 						name="numberOfRows"
 						value={numberOfRows}
-						onInput={(e) => setNumberOfRows(Number(e.target.value))}
+						onInput={(e) => {
+							setNumberOfRows(e.target.value);
+							validateBoardDimensions(
+								"numberOfRows",
+								e.target.value,
+								"the board would be too small!",
+							);
+						}}
 					/>
-					<div className="error">{errors["numberOfRows"]}</div>
+					<div className="error">{customiseGameErrors["numberOfRows"]}</div>
 				</div>
 			</div>
 			<div className="inputFieldContainer">
@@ -41,9 +84,16 @@ export default function CustomiseGameForm({
 					<input
 						name="connectNumber"
 						value={numberToConnect}
-						onInput={(e) => setNumberToConnect(Number(e.target.value))}
+						onInput={(e) => {
+							setNumberToConnect(e.target.value);
+							validateBoardDimensions(
+								"numberToConnect",
+								e.target.value,
+								"that wouldn't be fair",
+							);
+						}}
 					/>
-					<div className="error">{errors["numberToConnect"]}</div>
+					<div className="error">{customiseGameErrors["numberToConnect"]}</div>
 				</div>
 			</div>
 		</div>
