@@ -1,14 +1,17 @@
-.customiseGame {
+.buttonContainer {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 }
 
-.inputFieldContainer {
-	display: flex;
-	border: 5px solid white;
+.button {
+	font-size: large;
+	height: 27px;
 }
 
-.inputLabel {
+.joinTwoPlayerGameContainer {
+	display: flex;
+	justify-content: center;
 	border: 5px solid white;
 }
 

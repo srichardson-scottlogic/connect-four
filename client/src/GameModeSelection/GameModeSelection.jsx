@@ -1,11 +1,7 @@
+import JoinExistingGame from "../JoinExistingGame/JoinExistingGame";
 import "./GameModeSelection.css";
 
-export default function GameModeSelection({
-	handleBoardCustomisationSubmit,
-	handleJoinGame,
-	inputtedRoomId,
-	setInputtedRoomId,
-}) {
+export default function GameModeSelection({ handleBoardCustomisationSubmit }) {
 	return (
 		<>
 			<p className="text">
@@ -17,29 +13,15 @@ export default function GameModeSelection({
 				no return unless you refresh the page 🔴
 			</p>
 			<div className="twoPlayerButtonContainer">
-				<button className="buttonText" onClick={handleBoardCustomisationSubmit}>
+				<button className="button" onClick={handleBoardCustomisationSubmit}>
 					Create Online Room
 				</button>
 			</div>
 			<p className="text">🔴 OR 🔴</p>
-			<div className="joinTwoPlayerGameContainer">
-				<button className="buttonText" onClick={handleJoinGame}>
-					Join Existing Game
-				</button>
-				<label>
-					<input
-						className="gameRoomId"
-						placeholder="put game room code here"
-						value={inputtedRoomId}
-						onInput={(e) => setInputtedRoomId(e.target.value)}
-					/>
-				</label>
-			</div>
+			<JoinExistingGame />
 			<p className="text">🔵 OR 🔵</p>
 			<div className="onePlayerButtonContainer">
-				<button className="buttonText">
-					Pass and Play (Not Implemented Yet)
-				</button>
+				<button className="button">Pass and Play (Not Implemented Yet)</button>
 			</div>
 		</>
 	);

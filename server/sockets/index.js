@@ -1,7 +1,8 @@
 import { WebSocketServer } from "ws";
-import { v4 } from "uuid";
+import { v4, validate } from "uuid";
 import winnerHelper from "../helpers/winnerHelper.js";
 import roomIdHelper from "../helpers/roomIdHelper.js";
+import roomIdValidator from "./validation/roomIdValidator.js";
 
 const port = 8080;
 const wsServer = new WebSocketServer({ port: { port } });
@@ -22,13 +23,22 @@ const handleMessage = (bytes, userId) => {
 				message.numberOfRows,
 				message.numberToConnect,
 			);
-			broadcast("create", roomId);
+			broadcastToRoom("create", roomId);
 			break;
 
 		case "join":
-			if (joinRoom(message.roomId, userId)) {
-				broadcast("join", message.roomId);
+			const errors = roomIdValidator.validate(
+				rooms,
+				message.roomId,
+				maxPlayers,
+			);
+			if (errors) {
+				errors["action"] = "roomIdError";
+				broadcastErrorToUser(userId, errors);
+				break;
 			}
+			joinRoom(message.roomId, userId);
+			broadcastToRoom("join", message.roomId);
 			break;
 
 		case "customise":
@@ -38,12 +48,12 @@ const handleMessage = (bytes, userId) => {
 				message.numberOfColumns,
 				message.numberOfRows,
 			);
-			broadcast("customise", roomUsers[userId].roomId);
+			broadcastToRoom("customise", roomUsers[userId].roomId);
 			break;
 
 		case "play":
 			handlePlay(userId, message.columnIndex, message.rowIndex);
-			broadcast("play", roomUsers[userId].roomId);
+			broadcastToRoom("play", roomUsers[userId].roomId);
 			break;
 
 		default:
@@ -90,23 +100,13 @@ const createRoom = (userId, numberOfColumns, numberOfRows, numberToConnect) => {
 };
 
 const joinRoom = (roomId, userId) => {
-	if (!Object.keys(rooms).includes(roomId)) {
-		console.warn(`Room ${roomId} does not exist!`);
-		return false;
-	}
 	const room = rooms[roomId];
-
-	if (room.roomUsers.length >= maxPlayers) {
-		console.warn(`Room ${roomId} is full!`);
-		return false;
-	}
 
 	room.roomUsers.push(userId);
 	roomUsers[userId] = {
 		roomId: roomId,
 		colour: "Blue",
 	};
-	return true;
 };
 
 const customiseRoom = (
@@ -141,7 +141,7 @@ const handlePlay = (userId, columnIndex, rowIndex) => {
 	} else console.warn(`It is not ${playerColour}'s turn!`);
 };
 
-const broadcast = (action, roomId) => {
+const broadcastToRoom = (action, roomId) => {
 	const room = rooms[roomId];
 	room.roomUsers.forEach((userId) => {
 		const connection = connections[userId];
@@ -158,6 +158,12 @@ const broadcast = (action, roomId) => {
 		console.log(`Broadcasting to user ${userId} in room ${roomId}`);
 		connection.send(JSON.stringify(message));
 	});
+};
+
+const broadcastErrorToUser = (userId, message) => {
+	const connection = connections[userId];
+	console.log(`Broadcasting to user ${userId}`);
+	connection.send(JSON.stringify(message));
 };
 
 wsServer.on("connection", (connection) => {

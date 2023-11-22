@@ -18,7 +18,6 @@ export default function Home() {
 	const [numberOfColumns, setNumberOfColumns] = useState(7);
 	const [numberOfRows, setNumberOfRows] = useState(6);
 	const [numberToConnect, setNumberToConnect] = useState(4);
-	const [inputtedRoomId, setInputtedRoomId] = useState(null);
 
 	const { sendJsonMessage, lastJsonMessage } = useWebSocket(
 		process.env.REACT_APP_WS_URL,
@@ -40,13 +39,6 @@ export default function Home() {
 		}
 
 		sendJsonMessage(message);
-	};
-
-	const handleJoinGame = () => {
-		sendJsonMessage({
-			action: "join",
-			roomId: inputtedRoomId,
-		});
 	};
 
 	const handlePlay = useCallback(
@@ -87,6 +79,9 @@ export default function Home() {
 					);
 					break;
 
+				case "roomIdError":
+					break;
+
 				default:
 					console.warn(`Type: ${action} unknown`);
 					break;
@@ -115,9 +110,6 @@ export default function Home() {
 			{!gameCustomised && !roomId && (
 				<GameModeSelection
 					handleBoardCustomisationSubmit={handleBoardCustomisationSubmit}
-					handleJoinGame={handleJoinGame}
-					inputtedRoomId={inputtedRoomId}
-					setInputtedRoomId={setInputtedRoomId}
 				/>
 			)}
 			{gameCustomised && (
