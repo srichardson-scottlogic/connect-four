@@ -19,9 +19,17 @@ export default function GameInformation({
 		<div className="gameInfoContainer">
 			{roomId && <div className="gameId">Game Room Code = {roomId}</div>}
 			{roomId && !gameCustomised && (
-				<div className="shareText">
-					To play, share the game code with a friend!
-				</div>
+				<>
+					<div className="shareText">
+						To play, share the game code with a friend
+					</div>
+					<div className="shareText">
+						{"Or send them this url: " +
+							window.location.href +
+							"?gameRoomCode=" +
+							roomId}
+					</div>
+				</>
 			)}
 			{gameCustomised && (
 				<div className="playerColour">You are {playerColour}</div>

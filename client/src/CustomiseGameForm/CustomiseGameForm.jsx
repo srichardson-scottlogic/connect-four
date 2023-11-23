@@ -23,7 +23,7 @@ export default function CustomiseGameForm({
 			return true;
 		}
 
-		if (!dimensionValue.match(/^\d+$/)) {
+		if (!dimensionValue.match(/^(\d+|L)$/)) {
 			gameCustomisationErrors[dimension] = "please enter a positive number";
 			setCustomiseGameErrors(gameCustomisationErrors);
 			return false;

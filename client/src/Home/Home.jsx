@@ -1,5 +1,6 @@
 import useWebSocket from "react-use-websocket";
 import { useCallback, useState, useEffect } from "react";
+
 import Game from "../Game/Game";
 import GameInformation from "../GameInformation/GameInformation";
 import WinnerStatus from "../WinnerStatus/WinnerStatus";
@@ -58,10 +59,23 @@ export default function Home() {
 			setNumberOfColumns(numberOfColumns);
 			setNumberOfRows(numberOfRows);
 			setNumberToConnect(numberToConnect);
-			alert(playerColour === "Red" ? "Red" : "Blue" + " changed the board!");
+			alert((playerColour === "Red" ? "Red" : "Blue") + " changed the board!");
 		},
-		[setNumberOfColumns, setNumberOfRows, setNumberToConnect],
+		[setNumberOfColumns, setNumberOfRows, setNumberToConnect, playerColour],
 	);
+
+	useEffect(() => {
+		console.log("Runs once on mount");
+
+		const queryParameters = new URLSearchParams(window.location.search);
+		const roomIdParam = queryParameters.get("gameRoomCode");
+		if (roomIdParam) {
+			sendJsonMessage({
+				action: "join",
+				roomId: roomIdParam,
+			});
+		}
+	}, [sendJsonMessage]);
 
 	useEffect(() => {
 		if (lastJsonMessage) {
