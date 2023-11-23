@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import { v4, validate } from "uuid";
+import { v4 } from "uuid";
 import winnerHelper from "../helpers/winnerHelper.js";
 import roomIdHelper from "../helpers/roomIdHelper.js";
 import roomIdValidator from "./validation/roomIdValidator.js";
@@ -34,7 +34,7 @@ const handleMessage = (bytes, userId) => {
 			);
 			if (errors) {
 				errors["action"] = "roomIdError";
-				broadcastErrorToUser(userId, errors);
+				broadcastToUser(userId, errors);
 				break;
 			}
 			joinRoom(message.roomId, userId);
@@ -42,12 +42,29 @@ const handleMessage = (bytes, userId) => {
 			break;
 
 		case "customise":
-			customiseRoom(
+			//Inform the other room user that the board has been customised
+			const customisedRoom = customiseRoom(
 				userId,
 				message.numberToConnect,
 				message.numberOfColumns,
 				message.numberOfRows,
 			);
+
+			//Inform the other room user that the board has been customised
+			if (customisedRoom.roomUsers.length > 1) {
+				const otherPlayer = customisedRoom.roomUsers.filter(
+					(user) => user !== userId,
+				);
+				const userMessage = {
+					action: "customiseFromOtherPlayer",
+					numberToConnect: message.numberToConnect,
+					numberOfColumns: message.numberOfColumns,
+					numberOfRows: message.numberOfRows,
+				};
+
+				broadcastToUser(otherPlayer, userMessage);
+			}
+
 			broadcastToRoom("customise", roomUsers[userId].roomId);
 			break;
 
@@ -126,6 +143,7 @@ const customiseRoom = (
 		.map(() => new Array(numberOfRows).fill("White"));
 	room.numberToConnect = numberToConnect;
 	room.winner = null;
+	return room;
 };
 
 const handlePlay = (userId, columnIndex, rowIndex) => {
@@ -149,7 +167,6 @@ const handlePlay = (userId, columnIndex, rowIndex) => {
 const broadcastToRoom = (action, roomId) => {
 	const room = rooms[roomId];
 	room.roomUsers.forEach((userId) => {
-		const connection = connections[userId];
 		const message = {
 			roomId: roomId,
 			board: room.board,
@@ -160,12 +177,11 @@ const broadcastToRoom = (action, roomId) => {
 		if (action === "join") {
 			message.playerColour = roomUsers[userId].colour;
 		}
-		console.log(`Broadcasting to user ${userId} in room ${roomId}`);
-		connection.send(JSON.stringify(message));
+		broadcastToUser(userId, message);
 	});
 };
 
-const broadcastErrorToUser = (userId, message) => {
+const broadcastToUser = (userId, message) => {
 	const connection = connections[userId];
 	console.log(`Broadcasting to user ${userId}`);
 	connection.send(JSON.stringify(message));

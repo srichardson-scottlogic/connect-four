@@ -53,6 +53,16 @@ export default function Home() {
 		[setSquares, setWinner, setRedIsNext],
 	);
 
+	const handleCustomisationFromOtherPlayer = useCallback(
+		(numberOfColumns, numberOfRows, numberToConnect) => {
+			setNumberOfColumns(numberOfColumns);
+			setNumberOfRows(numberOfRows);
+			setNumberToConnect(numberToConnect);
+			alert(playerColour === "Red" ? "Red" : "Blue" + " changed the board!");
+		},
+		[setNumberOfColumns, setNumberOfRows, setNumberToConnect],
+	);
+
 	useEffect(() => {
 		if (lastJsonMessage) {
 			const action = lastJsonMessage.action;
@@ -73,6 +83,13 @@ export default function Home() {
 					setGameCustomised(true);
 					break;
 
+				case "customiseFromOtherPlayer":
+					handleCustomisationFromOtherPlayer(
+						lastJsonMessage.numberOfColumns,
+						lastJsonMessage.numberOfRows,
+						lastJsonMessage.numberToConnect,
+					);
+					break;
 				case "customise":
 				case "play":
 					handlePlay(
@@ -90,7 +107,7 @@ export default function Home() {
 					break;
 			}
 		}
-	}, [lastJsonMessage, handlePlay]);
+	}, [lastJsonMessage, handlePlay, handleCustomisationFromOtherPlayer]);
 
 	const validateBoardCustomisationSubmit = () => {
 		const errors = { ...customiseGameErrors };
