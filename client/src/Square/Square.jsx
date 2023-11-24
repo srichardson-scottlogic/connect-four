@@ -2,10 +2,10 @@ import "./Square.css";
 
 export default function Square({ colour, onSquareClick }) {
 	return (
-		<button
+		<div
 			style={{ backgroundColor: colour }}
 			className={"square"}
 			onClick={onSquareClick}
-		></button>
+		></div>
 	);
 }

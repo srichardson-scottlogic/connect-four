@@ -1,4 +1,6 @@
 import "./GameInformation.css";
+import copyIcon from ".././resources/copyIcon.png";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function GameInformation({
 	roomId,
@@ -23,11 +25,17 @@ export default function GameInformation({
 					<div className="shareText">
 						To play, share the game code with a friend
 					</div>
-					<div className="shareText">
-						{"Or send them this url: " +
-							window.location.href +
-							"?gameRoomCode=" +
-							roomId}
+					<div className="urlLink">
+						<div className="urlText">{window.location.href}</div>
+						<CopyToClipboard className="copyGame" text={window.location.href}>
+							<button className="copyButton">
+								<img
+									src={copyIcon}
+									className="copyIcon"
+									alt="copy to clipboard"
+								/>
+							</button>
+						</CopyToClipboard>
 					</div>
 				</>
 			)}

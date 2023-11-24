@@ -19,3 +19,22 @@
 .whoIsNext {
 	border: 10px solid white;
 }
+
+.urlLink {
+	display: flex;
+	padding: 5px;
+}
+
+.urlText {
+	border-style: groove;
+	background-color: wheat;
+	display: flex;
+	align-items: center;
+	font-size: small;
+}
+
+.copyIcon {
+	width: 30px;
+	height: auto;
+	cursor: pointer;
+}

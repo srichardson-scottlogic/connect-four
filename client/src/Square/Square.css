@@ -2,4 +2,7 @@
 	height: 14vh;
 	width: 14vh;
 	border-radius: 50%;
+	border-style: groove;
+	border-width: 2px;
+	border-color: black;
 }

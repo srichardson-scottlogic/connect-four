@@ -65,8 +65,6 @@ export default function Home() {
 	);
 
 	useEffect(() => {
-		console.log("Runs once on mount");
-
 		const queryParameters = new URLSearchParams(window.location.search);
 		const roomIdParam = queryParameters.get("gameRoomCode");
 		if (roomIdParam) {
@@ -84,6 +82,15 @@ export default function Home() {
 			switch (action) {
 				case "create":
 					setRoomId(lastJsonMessage.roomId);
+					const location = window.history.location || window.location;
+
+					var queryParams = new URLSearchParams(location.search);
+
+					// Set new or modify existing parameter value.
+					queryParams.set("gameRoomCode", lastJsonMessage.roomId);
+
+					// Replace current querystring with the new one.
+					window.history.replaceState(null, null, "?" + queryParams.toString());
 					break;
 
 				case "join":
