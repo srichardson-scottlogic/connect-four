@@ -28,13 +28,63 @@
 .urlText {
 	border-style: groove;
 	background-color: wheat;
-	display: flex;
-	align-items: center;
 	font-size: small;
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	padding: 5px 2px;
+}
+
+.urlText .tooltipText {
+	visibility: hidden;
+	width: 200px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	top: 100%;
+	margin-top: 5px;
+	left: 24%;
+	margin-left: -60px;
+}
+
+.urlText:hover .tooltipText {
+	visibility: visible;
 }
 
 .copyIcon {
 	width: 30px;
 	height: auto;
 	cursor: pointer;
+}
+
+.copy {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.copy .tooltipText {
+	visibility: hidden;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 3px;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	top: 100%;
+	margin-top: 5px;
+	left: 0%;
+}
+
+.copy:hover .tooltipText {
+	visibility: visible;
 }

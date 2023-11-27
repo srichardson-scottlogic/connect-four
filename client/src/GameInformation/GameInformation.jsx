@@ -1,6 +1,7 @@
 import "./GameInformation.css";
 import copyIcon from ".././resources/copyIcon.png";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useState } from "react";
 
 export default function GameInformation({
 	roomId,
@@ -9,6 +10,8 @@ export default function GameInformation({
 	playerColour,
 	winner,
 }) {
+	const [copyStatus, setCopyStatus] = useState("Copy");
+
 	let whoIsNext;
 	if (
 		(redIsNext && playerColour === "Red") ||
@@ -16,6 +19,10 @@ export default function GameInformation({
 	) {
 		whoIsNext = "It's Your Go!";
 	} else whoIsNext = `It's ${redIsNext ? "Red" : "Blue"}'s Go!`;
+
+	const onCopyClick = () => {
+		setCopyStatus("Copied to clipboard!");
+	};
 
 	return (
 		<div className="gameInfoContainer">
@@ -26,16 +33,22 @@ export default function GameInformation({
 						To play, share the game code with a friend
 					</div>
 					<div className="urlLink">
-						<div className="urlText">{window.location.href}</div>
-						<CopyToClipboard className="copyGame" text={window.location.href}>
-							<button className="copyButton">
-								<img
-									src={copyIcon}
-									className="copyIcon"
-									alt="copy to clipboard"
-								/>
-							</button>
-						</CopyToClipboard>
+						<div className="urlText">
+							Hover over me to see url
+							<span class="tooltipText">{window.location.href}</span>
+						</div>
+						<div className="copy">
+							<CopyToClipboard className="copyGame" text={window.location.href}>
+								<button className="copyButton" onClick={onCopyClick}>
+									<img
+										src={copyIcon}
+										className="copyIcon"
+										alt="copy to clipboard"
+									/>
+								</button>
+							</CopyToClipboard>
+							<span class="tooltipText">{copyStatus}</span>
+						</div>
 					</div>
 				</>
 			)}
