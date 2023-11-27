@@ -1,7 +1,10 @@
 import JoinExistingGame from "../JoinExistingGame/JoinExistingGame";
 import "./GameModeSelection.css";
 
-export default function GameModeSelection({ handleBoardCustomisationSubmit }) {
+export default function GameModeSelection({
+	handleBoardCustomisationSubmit,
+	handlePassAndPlayEnabled,
+}) {
 	return (
 		<>
 			<p className="text">
@@ -21,7 +24,9 @@ export default function GameModeSelection({ handleBoardCustomisationSubmit }) {
 			<JoinExistingGame />
 			<p className="text">🔵 OR 🔵</p>
 			<div className="onePlayerButtonContainer">
-				<button className="button">Pass and Play (Not Implemented Yet)</button>
+				<button className="button" onClick={handlePassAndPlayEnabled}>
+					Pass and Play
+				</button>
 			</div>
 		</>
 	);

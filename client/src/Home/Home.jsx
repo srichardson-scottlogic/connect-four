@@ -2,6 +2,7 @@ import useWebSocket from "react-use-websocket";
 import { useCallback, useState, useEffect } from "react";
 
 import Game from "../Game/Game";
+import PassAndPlayGame from "../PassAndPlayGame/PassAndPlayGame";
 import GameInformation from "../GameInformation/GameInformation";
 import WinnerStatus from "../WinnerStatus/WinnerStatus";
 import CustomiseGameForm from "../CustomiseGameForm/CustomiseGameForm";
@@ -15,6 +16,7 @@ export default function Home() {
 	const [roomId, setRoomId] = useState(null);
 	const [playerColour, setPlayerColour] = useState(null);
 	const [redIsNext, setRedIsNext] = useState(null);
+	const [passAndPlayEnabled, setPassAndPlayEnabled] = useState(false);
 
 	const [numberOfColumns, setNumberOfColumns] = useState(7);
 	const [numberOfRows, setNumberOfRows] = useState(6);
@@ -45,6 +47,15 @@ export default function Home() {
 		}
 	};
 
+	const handlePassAndPlayBoardCustomisationSubmit = () => {
+		if (validateBoardCustomisationSubmit()) {
+			const nextSquares = new Array(Number(numberOfColumns))
+				.fill(0)
+				.map(() => new Array(Number(numberOfRows)).fill("White"));
+			handlePlay(nextSquares, null, redIsNext);
+		}
+	};
+
 	const handlePlay = useCallback(
 		(nextSquares, nextWinner, redIsNext) => {
 			setSquares(nextSquares);
@@ -63,6 +74,17 @@ export default function Home() {
 		},
 		[setNumberOfColumns, setNumberOfRows, setNumberToConnect, playerColour],
 	);
+
+	const handlePassAndPlayEnabled = () => {
+		setPassAndPlayEnabled(true);
+		setGameCustomised(true);
+		setRedIsNext(true);
+		setSquares(
+			new Array(numberOfColumns)
+				.fill(0)
+				.map(() => new Array(numberOfRows).fill("White")),
+		);
+	};
 
 	useEffect(() => {
 		const queryParameters = new URLSearchParams(window.location.search);
@@ -175,9 +197,10 @@ export default function Home() {
 			{!gameCustomised && !roomId && (
 				<GameModeSelection
 					handleBoardCustomisationSubmit={handleBoardCustomisationSubmit}
+					handlePassAndPlayEnabled={handlePassAndPlayEnabled}
 				/>
 			)}
-			{gameCustomised && (
+			{gameCustomised && !passAndPlayEnabled && (
 				<>
 					<ResetButton
 						winner={winner}
@@ -189,6 +212,21 @@ export default function Home() {
 						roomId={roomId}
 						playerColour={playerColour}
 						redIsNext={redIsNext}
+					/>
+				</>
+			)}
+			{gameCustomised && passAndPlayEnabled && (
+				<>
+					<ResetButton
+						winner={winner}
+						onClick={handlePassAndPlayBoardCustomisationSubmit}
+					/>
+					<PassAndPlayGame
+						squares={squares}
+						winner={winner}
+						redIsNext={redIsNext}
+						connectNumber={numberToConnect}
+						handlePlay={handlePlay}
 					/>
 				</>
 			)}
