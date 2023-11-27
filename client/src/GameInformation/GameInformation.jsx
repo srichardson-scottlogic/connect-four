@@ -17,8 +17,8 @@ export default function GameInformation({
 		(redIsNext && playerColour === "Red") ||
 		(!redIsNext && playerColour === "Blue")
 	) {
-		whoIsNext = "It's Your Go!";
-	} else whoIsNext = `It's ${redIsNext ? "Red" : "Blue"}'s Go!`;
+		whoIsNext = "it's your go!";
+	} else whoIsNext = `it's ${redIsNext ? "Red" : "Blue"}'s go`;
 
 	const onCopyClick = () => {
 		setCopyStatus("Copied to clipboard!");
@@ -26,7 +26,7 @@ export default function GameInformation({
 
 	return (
 		<div className="gameInfoContainer">
-			{roomId && <div className="gameId">Game Room Code = {roomId}</div>}
+			{roomId && <div className="gameId">game room code = {roomId}</div>}
 			{roomId && !gameCustomised && (
 				<>
 					<div className="shareText">
@@ -35,7 +35,7 @@ export default function GameInformation({
 					<div className="urlLink">
 						<div className="urlText">
 							Hover over me to see url
-							<span class="tooltipText">{window.location.href}</span>
+							<span className="tooltipText">{window.location.href}</span>
 						</div>
 						<div className="copy">
 							<CopyToClipboard className="copyGame" text={window.location.href}>
@@ -47,13 +47,13 @@ export default function GameInformation({
 									/>
 								</button>
 							</CopyToClipboard>
-							<span class="tooltipText">{copyStatus}</span>
+							<span className="tooltipText">{copyStatus}</span>
 						</div>
 					</div>
 				</>
 			)}
-			{gameCustomised && (
-				<div className="playerColour">You are {playerColour}</div>
+			{gameCustomised && playerColour && (
+				<div className="playerColour">you are {playerColour}</div>
 			)}
 			{gameCustomised && !winner && (
 				<div className="whoIsNext">{whoIsNext}</div>

@@ -5,11 +5,12 @@ export default function Board({
 	squares,
 	onPlay,
 	winner,
-	playerColour,
 	redIsNext,
+	playerColour,
 }) {
 	const numberOfColumns = squares.length;
 	const numberOfRows = squares[0].length;
+
 	const handlePlay = (columnIndex) => {
 		if (
 			squares[columnIndex][numberOfRows - 1] !== "White" ||
