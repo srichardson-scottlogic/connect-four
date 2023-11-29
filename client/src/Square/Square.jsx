@@ -4,7 +4,7 @@ export default function Square({ colour, onSquareClick }) {
 	return (
 		<div
 			style={{ backgroundColor: colour }}
-			className={"square"}
+			className="square"
 			onClick={onSquareClick}
 		></div>
 	);
