@@ -52,6 +52,7 @@ export default function Home() {
 			const nextSquares = new Array(Number(numberOfColumns))
 				.fill(0)
 				.map(() => new Array(Number(numberOfRows)).fill("White"));
+			setNumberToConnect(Number(numberToConnect));
 			handlePlay(nextSquares, null, redIsNext);
 		}
 	};
