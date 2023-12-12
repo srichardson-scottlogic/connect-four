@@ -38,7 +38,11 @@ export default function Board({
 	}
 
 	return (
-		<div className="board" data-columns={numberOfColumns}>
+		<div
+			className="board"
+			data-columns={numberOfColumns}
+			data-rows={numberOfRows}
+		>
 			{grid}
 		</div>
 	);

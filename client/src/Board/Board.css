@@ -1,16 +1,24 @@
+main {
+	container-type: size;
+	margin: 5px;
+}
+
+
 .board {
-	--column-count: 1;
-	display: grid;
-	grid-template-columns: repeat(var(--column-count), minmax(60px, 1fr));
-	width: 80%;
-	margin: 1rem auto;
-}
-.board[data-columns="2"] {
-	--column-count: 2;
-}
-.board[data-columns="3"] {
 	--column-count: 3;
+	--row-count: 3;
+	display: grid;
+	width: fit-content;
+	margin: auto;
 }
+
+@container (width > 1px) {
+	.board {
+		grid-template-columns: repeat(var(--column-count), min(calc(100cqh / var(--row-count)), calc(100cqw / var(--column-count))));
+		
+	}
+}
+
 .board[data-columns="4"] {
 	--column-count: 4;
 }
@@ -31,4 +39,32 @@
 }
 .board[data-columns="10"] {
 	--column-count: 10;
+}
+
+.board[data-rows="4"] {
+	--row-count: 4;
+}
+
+.board[data-rows="5"] {
+	--row-count: 5;
+}
+
+.board[data-rows="6"] {
+	--row-count: 6;
+}
+
+.board[data-rows="7"] {
+	--row-count: 7;
+}
+
+.board[data-rows="8"] {
+	--row-count: 8;
+}
+
+.board[data-rows="9"] {
+	--row-count: 9;
+}
+
+.board[data-rows="10"] {
+	--row-count: 10;
 }
