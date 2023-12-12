@@ -1,11 +1,34 @@
 .board {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 30px;
+	--column-count: 1;
+	display: grid;
+	grid-template-columns: repeat(var(--column-count), minmax(60px, 1fr));
+	width: 80%;
+	margin: 1rem auto;
 }
-
-.board-column {
-	display: flex;
-	flex-direction: column;
+.board[data-columns="2"] {
+	--column-count: 2;
+}
+.board[data-columns="3"] {
+	--column-count: 3;
+}
+.board[data-columns="4"] {
+	--column-count: 4;
+}
+.board[data-columns="5"] {
+	--column-count: 5;
+}
+.board[data-columns="6"] {
+	--column-count: 6;
+}
+.board[data-columns="7"] {
+	--column-count: 7;
+}
+.board[data-columns="8"] {
+	--column-count: 8;
+}
+.board[data-columns="9"] {
+	--column-count: 9;
+}
+.board[data-columns="10"] {
+	--column-count: 10;
 }

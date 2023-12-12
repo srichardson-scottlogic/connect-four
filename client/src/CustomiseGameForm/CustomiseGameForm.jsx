@@ -34,6 +34,11 @@ export default function CustomiseGameForm({
 			setCustomiseGameErrors(gameCustomisationErrors);
 			return false;
 		}
+		if (Number(dimensionValue) > 10) {
+			gameCustomisationErrors[dimension] = "be sensible!";
+			setCustomiseGameErrors(gameCustomisationErrors);
+			return false;
+		}
 
 		delete gameCustomisationErrors[dimension];
 		setCustomiseGameErrors(gameCustomisationErrors);
