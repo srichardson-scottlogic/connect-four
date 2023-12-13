@@ -1,6 +1,5 @@
 .square {
-	height: 13vh;
-	width: 13vh;
+	aspect-ratio: 1;
 	border-radius: 50%;
 	border-style: groove;
 	border-width: 2px;

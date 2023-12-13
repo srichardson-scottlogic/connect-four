@@ -25,10 +25,9 @@ export default function Board({
 	};
 
 	const grid = [];
-	for (let i = 0; i < numberOfColumns; i++) {
-		const rows = [];
-		for (let j = 0; j < numberOfRows; j++) {
-			rows.unshift(
+	for (let j = 0; j < numberOfRows; j++) {
+		for (let i = 0; i < numberOfColumns; i++) {
+			grid.unshift(
 				<Square
 					key={i + ", " + j}
 					colour={squares[i][j]}
@@ -36,14 +35,17 @@ export default function Board({
 				/>,
 			);
 		}
-		grid.push(
-			<div className="board-column" key={i}>
-				{rows}
-			</div>,
-		);
 	}
 
-	return <div className="board">{grid}</div>;
+	return (
+		<div
+			className="board"
+			data-columns={numberOfColumns}
+			data-rows={numberOfRows}
+		>
+			{grid}
+		</div>
+	);
 }
 
 const calculateNextSquare = (columnSquares) => {

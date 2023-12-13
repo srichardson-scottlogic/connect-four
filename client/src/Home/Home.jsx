@@ -177,58 +177,62 @@ export default function Home() {
 
 	return (
 		<>
-			<GameInformation
-				roomId={roomId}
-				redIsNext={redIsNext}
-				gameCustomised={gameCustomised}
-				playerColour={playerColour}
-				winner={winner}
-			/>
-			<CustomiseGameForm
-				numberOfColumns={numberOfColumns}
-				setNumberOfColumns={setNumberOfColumns}
-				numberOfRows={numberOfRows}
-				setNumberOfRows={setNumberOfRows}
-				numberToConnect={numberToConnect}
-				setNumberToConnect={setNumberToConnect}
-				customiseGameErrors={customiseGameErrors}
-				setCustomiseGameErrors={setCustomiseGameErrors}
-			/>
-			<WinnerStatus winner={winner} playerColour={playerColour} />
-			{!gameCustomised && !roomId && (
-				<GameModeSelection
-					handleBoardCustomisationSubmit={handleBoardCustomisationSubmit}
-					handlePassAndPlayEnabled={handlePassAndPlayEnabled}
+			<header>
+				<GameInformation
+					roomId={roomId}
+					redIsNext={redIsNext}
+					gameCustomised={gameCustomised}
+					playerColour={playerColour}
+					winner={winner}
 				/>
-			)}
-			{gameCustomised && !passAndPlayEnabled && (
-				<>
-					<ResetButton
-						winner={winner}
-						onClick={handleBoardCustomisationSubmit}
+				<CustomiseGameForm
+					numberOfColumns={numberOfColumns}
+					setNumberOfColumns={setNumberOfColumns}
+					numberOfRows={numberOfRows}
+					setNumberOfRows={setNumberOfRows}
+					numberToConnect={numberToConnect}
+					setNumberToConnect={setNumberToConnect}
+					customiseGameErrors={customiseGameErrors}
+					setCustomiseGameErrors={setCustomiseGameErrors}
+				/>
+				<WinnerStatus winner={winner} playerColour={playerColour} />
+				{!gameCustomised && !roomId && (
+					<GameModeSelection
+						handleBoardCustomisationSubmit={handleBoardCustomisationSubmit}
+						handlePassAndPlayEnabled={handlePassAndPlayEnabled}
 					/>
-					<Game
-						squares={squares}
-						winner={winner}
-						roomId={roomId}
-						playerColour={playerColour}
-						redIsNext={redIsNext}
-					/>
-				</>
-			)}
+				)}
+				{gameCustomised && !passAndPlayEnabled && (
+					<>
+						<ResetButton
+							winner={winner}
+							onClick={handleBoardCustomisationSubmit}
+						/>
+						<Game
+							squares={squares}
+							winner={winner}
+							roomId={roomId}
+							playerColour={playerColour}
+							redIsNext={redIsNext}
+						/>
+					</>
+				)}
+			</header>
 			{gameCustomised && passAndPlayEnabled && (
 				<>
 					<ResetButton
 						winner={winner}
 						onClick={handlePassAndPlayBoardCustomisationSubmit}
 					/>
-					<PassAndPlayGame
-						squares={squares}
-						winner={winner}
-						redIsNext={redIsNext}
-						connectNumber={numberToConnect}
-						handlePlay={handlePlay}
-					/>
+					<main>
+						<PassAndPlayGame
+							squares={squares}
+							winner={winner}
+							redIsNext={redIsNext}
+							connectNumber={numberToConnect}
+							handlePlay={handlePlay}
+						/>
+					</main>
 				</>
 			)}
 		</>
