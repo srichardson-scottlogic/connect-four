@@ -202,36 +202,35 @@ export default function Home() {
 						handlePassAndPlayEnabled={handlePassAndPlayEnabled}
 					/>
 				)}
-				{gameCustomised && !passAndPlayEnabled && (
-					<>
-						<ResetButton
-							winner={winner}
-							onClick={handleBoardCustomisationSubmit}
-						/>
-						<Game
-							squares={squares}
-							winner={winner}
-							roomId={roomId}
-							playerColour={playerColour}
-							redIsNext={redIsNext}
-						/>
-					</>
-				)}
 			</header>
-			{gameCustomised && passAndPlayEnabled && (
+			{gameCustomised && (
 				<>
 					<ResetButton
 						winner={winner}
-						onClick={handlePassAndPlayBoardCustomisationSubmit}
+						onClick={
+							passAndPlayEnabled
+								? handlePassAndPlayBoardCustomisationSubmit
+								: handleBoardCustomisationSubmit
+						}
 					/>
 					<main>
-						<PassAndPlayGame
-							squares={squares}
-							winner={winner}
-							redIsNext={redIsNext}
-							connectNumber={numberToConnect}
-							handlePlay={handlePlay}
-						/>
+						{passAndPlayEnabled ? (
+							<PassAndPlayGame
+								squares={squares}
+								winner={winner}
+								redIsNext={redIsNext}
+								connectNumber={numberToConnect}
+								handlePlay={handlePlay}
+							/>
+						) : (
+							<Game
+								squares={squares}
+								winner={winner}
+								roomId={roomId}
+								playerColour={playerColour}
+								redIsNext={redIsNext}
+							/>
+						)}
 					</main>
 				</>
 			)}
