@@ -12,11 +12,11 @@
 .joinTwoPlayerGameContainer {
 	display: flex;
 	justify-content: center;
-	border: 5px solid white;
 }
 
+.joinTwoPlayerGameContainer,
 .inputField {
-	border: 5px solid white;
+	margin: 5px;
 }
 
 .error {

@@ -8,14 +8,9 @@
 	height: 27px;
 }
 
-.twoPlayerButtonContainer {
-	display: flex;
-	justify-content: center;
-	border: 5px solid white;
-}
-
+.twoPlayerButtonContainer,
 .onePlayerButtonContainer {
 	display: flex;
 	justify-content: center;
-	border: 5px solid white;
+	margin: 5px;
 }

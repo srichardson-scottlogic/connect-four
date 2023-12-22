@@ -176,7 +176,11 @@ export default function Home() {
 	};
 
 	return (
-		<>
+		<div
+			className="container"
+			data-next={redIsNext ? "red" : "blue"}
+			data-winner={winner}
+		>
 			<header>
 				<GameInformation
 					roomId={roomId}
@@ -234,6 +238,6 @@ export default function Home() {
 					</main>
 				</>
 			)}
-		</>
+		</div>
 	);
 }
