@@ -3,7 +3,6 @@ main {
 	margin: 5px;
 }
 
-
 .board {
 	--column-count: 3;
 	--row-count: 3;
@@ -12,31 +11,49 @@ main {
 	margin: auto;
 }
 
+/* to be overriden by the @container in browsers that support it */
+main {
+	overflow: auto;
+}
+
+.board {
+	grid-template-columns: repeat(var(--column-count), min(calc(60vh / var(--row-count)), calc(90vw / var(--column-count))));
+}
+
 @container (width > 1px) {
 	.board {
 		grid-template-columns: repeat(var(--column-count), min(calc(100cqh / var(--row-count)), calc(100cqw / var(--column-count))));
-		
+	}
+
+	main {
+		overflow: hidden;
 	}
 }
 
 .board[data-columns="4"] {
 	--column-count: 4;
 }
+
 .board[data-columns="5"] {
 	--column-count: 5;
 }
+
 .board[data-columns="6"] {
 	--column-count: 6;
 }
+
 .board[data-columns="7"] {
 	--column-count: 7;
 }
+
 .board[data-columns="8"] {
 	--column-count: 8;
 }
+
 .board[data-columns="9"] {
 	--column-count: 9;
 }
+
 .board[data-columns="10"] {
 	--column-count: 10;
 }
