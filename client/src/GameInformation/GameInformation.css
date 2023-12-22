@@ -4,20 +4,11 @@
 	font-size: large;
 }
 
-.gameId {
-	border: 10px solid white;
-}
-
-.shareText {
-	border: 10px solid white;
-}
-
-.playerColour {
-	border: 10px solid white;
-}
-
+.gameId,
+.shareText,
+.playerColour,
 .whoIsNext {
-	border: 10px solid white;
+	margin: 10px;
 }
 
 .urlLink {

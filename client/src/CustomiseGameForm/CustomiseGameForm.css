@@ -6,15 +6,13 @@
 
 .inputFieldContainer {
 	display: flex;
-	border: 5px solid white;
+	align-items: center;
 }
 
-.inputLabel {
-	border: 5px solid white;
-}
-
+.inputFieldContainer,
+.inputLabel,
 .inputField {
-	border: 5px solid white;
+	margin: 5px;
 }
 
 .error {
