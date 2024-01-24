@@ -17,6 +17,7 @@ export default function Home() {
 	const [playerColour, setPlayerColour] = useState(null);
 	const [redIsNext, setRedIsNext] = useState(null);
 	const [passAndPlayEnabled, setPassAndPlayEnabled] = useState(false);
+	const [computerPlayEnabled, setComputerPlayEnabled] = useState(false);
 
 	const [numberOfColumns, setNumberOfColumns] = useState(7);
 	const [numberOfRows, setNumberOfRows] = useState(6);
@@ -33,14 +34,32 @@ export default function Home() {
 	const handleBoardCustomisationSubmit = () => {
 		if (validateBoardCustomisationSubmit()) {
 			const message = {
-				action: "customise",
+				action: computerPlayEnabled ? "customiseComputer" : "customiseOnline",
 				numberOfColumns: Number(numberOfColumns),
 				numberOfRows: Number(numberOfRows),
 				numberToConnect: Number(numberToConnect),
 			};
 
 			if (!gameCustomised) {
-				message.action = "create";
+				message.action = "createOnline";
+			}
+
+			sendJsonMessage(message);
+		}
+	};
+
+	const handleComputerPlayEnabled = () => {
+		setComputerPlayEnabled(true);
+		if (validateBoardCustomisationSubmit()) {
+			const message = {
+				action: "customiseComputer",
+				numberOfColumns: Number(numberOfColumns),
+				numberOfRows: Number(numberOfRows),
+				numberToConnect: Number(numberToConnect),
+			};
+
+			if (!gameCustomised) {
+				message.action = "createComputer";
 			}
 
 			sendJsonMessage(message);
@@ -204,6 +223,7 @@ export default function Home() {
 					<GameModeSelection
 						handleBoardCustomisationSubmit={handleBoardCustomisationSubmit}
 						handlePassAndPlayEnabled={handlePassAndPlayEnabled}
+						handleComputerPlayEnabled={handleComputerPlayEnabled}
 					/>
 				)}
 			</header>

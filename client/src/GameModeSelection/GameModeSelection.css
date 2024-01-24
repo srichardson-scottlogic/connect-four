@@ -9,7 +9,8 @@
 }
 
 .twoPlayerButtonContainer,
-.onePlayerButtonContainer {
+.onePlayerButtonContainer,
+.playComputerButtonContainer {
 	display: flex;
 	justify-content: center;
 	margin: 5px;

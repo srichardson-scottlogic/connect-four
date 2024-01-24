@@ -4,6 +4,7 @@ import "./GameModeSelection.css";
 export default function GameModeSelection({
 	handleBoardCustomisationSubmit,
 	handlePassAndPlayEnabled,
+	handleComputerPlayEnabled,
 }) {
 	return (
 		<>
@@ -26,6 +27,12 @@ export default function GameModeSelection({
 			<div className="onePlayerButtonContainer">
 				<button className="button" onClick={handlePassAndPlayEnabled}>
 					Pass and Play
+				</button>
+			</div>
+			<p className="text">🔴 OR 🔵</p>
+			<div className="playComputerButtonContainer">
+				<button className="button" onClick={handleComputerPlayEnabled}>
+					Play Computer
 				</button>
 			</div>
 		</>
