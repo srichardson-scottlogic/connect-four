@@ -23,6 +23,7 @@ export default function Home() {
 	const [numberOfRows, setNumberOfRows] = useState(6);
 	const [numberToConnect, setNumberToConnect] = useState(4);
 	const [customiseGameErrors, setCustomiseGameErrors] = useState({});
+	const [boardStateScore, setBoardStateScore] = useState(10);
 
 	const { sendJsonMessage, lastJsonMessage } = useWebSocket(
 		process.env.REACT_APP_WS_URL,
@@ -160,6 +161,9 @@ export default function Home() {
 						lastJsonMessage.winner,
 						lastJsonMessage.redIsNext,
 					);
+					if (lastJsonMessage.score) {
+						setBoardStateScore(lastJsonMessage.score);
+					}
 					break;
 
 				case "roomIdError":
@@ -237,6 +241,7 @@ export default function Home() {
 								: handleBoardCustomisationSubmit
 						}
 					/>
+					{computerPlayEnabled && <p> board state score: {boardStateScore}</p>}
 					<main>
 						{passAndPlayEnabled ? (
 							<PassAndPlayGame

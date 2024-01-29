@@ -243,12 +243,18 @@ const handleComputerPlay = (userId, playerColour, columnIndex, rowIndex) => {
 	const computerGame = computerGames[computerGameId];
 
 	if (playHelper.itIsPlayersGo(computerGame.redIsNext, playerColour)) {
-		computerGames[computerGameId] = playHelper.setCurrentMove(
+		const currentGame = playHelper.setCurrentMove(
 			computerGame,
 			playerColour,
 			columnIndex,
 			rowIndex,
 		);
+		currentGame.score = computerMoveHelper.calculateScore(
+			computerGame.numberToConnect,
+			computerGame.board,
+			playerColour,
+		);
+		computerGames[computerGameId] = currentGame;
 		broadcastComputerGameToUser(userId, computerGames[computerGameId], "play");
 	}
 
@@ -307,6 +313,7 @@ const broadcastComputerGameToUser = (userId, computerGame, action) => {
 		board: computerGame.board,
 		redIsNext: computerGame.redIsNext,
 		winner: computerGame.winner,
+		score: computerGame.score,
 		action: action,
 	};
 	if (action === "join") {

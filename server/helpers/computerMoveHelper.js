@@ -14,21 +14,52 @@ const calculateComputerMove = (computerGame) => {
 		}
 	}
 
-	const rowIndex = calculateIndexForColumn(computerGame.board[randomColumn]);
+	let maxScoreColumnIndex = 0;
+	let maxScore = 0;
+	for (
+		let potentialColumnIndex = 0;
+		potentialColumnIndex < numberOfColumns;
+		potentialColumnIndex++
+	) {
+		const potentialBoard = computerGame.board.map((column) => column.slice());
+		const potentialRowIndex = calculateRowIndexForColumn(
+			potentialBoard[potentialColumnIndex],
+		);
+		potentialBoard[potentialColumnIndex][potentialRowIndex] = computerColour;
 
-	computerGame.board[randomColumn][rowIndex] = computerColour;
+		const score = calculateScore(
+			computerGame.numberToConnect,
+			potentialBoard,
+			computerColour,
+		);
+		if (score > maxScore) {
+			maxScoreColumnIndex = potentialColumnIndex;
+			maxScore = score;
+		}
+	}
+
+	const rowIndex = calculateRowIndexForColumn(
+		computerGame.board[maxScoreColumnIndex],
+	);
+
+	computerGame.board[maxScoreColumnIndex][rowIndex] = computerColour;
 	computerGame.redIsNext = !computerGame.redIsNext;
 	computerGame.winner = winnerHelper.calculateWinner(
 		computerGame.board,
-		randomColumn,
+		maxScoreColumnIndex,
 		rowIndex,
 		computerGame.numberToConnect,
+	);
+	computerGame.score = calculateScore(
+		computerGame.numberToConnect,
+		computerGame.board,
+		computerGame.isRedNext ? "Red" : "Blue",
 	);
 
 	return computerGame;
 };
 
-const calculateIndexForColumn = (columnSquares) => {
+const calculateRowIndexForColumn = (columnSquares) => {
 	for (let square = 0; square < columnSquares.length; square++) {
 		if (columnSquares[square] === "White") {
 			return square;
@@ -36,4 +67,38 @@ const calculateIndexForColumn = (columnSquares) => {
 	}
 };
 
-export default { calculateComputerMove };
+const calculateScore = (numberToConnect, board, playerColour) => {
+	const numberOfColumns = board.length;
+
+	let score = 1;
+	for (
+		let connectNumber = numberToConnect;
+		connectNumber > 1;
+		connectNumber--
+	) {
+		for (
+			let potentialColumnIndex = 0;
+			potentialColumnIndex < numberOfColumns;
+			potentialColumnIndex++
+		) {
+			const potentialBoard = board.map((column) => column.slice());
+			const potentialRowIndex = calculateRowIndexForColumn(
+				potentialBoard[potentialColumnIndex],
+			);
+			potentialBoard[potentialColumnIndex][potentialRowIndex] = playerColour;
+			if (
+				winnerHelper.calculateWinner(
+					potentialBoard,
+					potentialColumnIndex,
+					potentialRowIndex,
+					connectNumber,
+				)
+			) {
+				score *= connectNumber;
+			}
+		}
+	}
+	return score;
+};
+
+export default { calculateComputerMove, calculateScore };
